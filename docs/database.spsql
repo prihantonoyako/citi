@@ -1,0 +1,216 @@
+-- DROP SCHEMA public;
+
+CREATE SCHEMA public AUTHORIZATION pg_database_owner;
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+-- public.provinces definition
+
+-- Drop table
+
+-- DROP TABLE public.provinces;
+
+CREATE TABLE public.provinces (
+	id uuid NOT NULL,
+	"name" varchar NOT NULL,
+	code varchar NULL,
+	CONSTRAINT provinces_pkey PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.provinces OWNER TO postgres;
+GRANT ALL ON TABLE public.provinces TO postgres;
+
+
+-- public.users definition
+
+-- Drop table
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users (
+	id uuid NOT NULL,
+	username varchar NOT NULL,
+	"password" bpchar(60) NULL,
+	email varchar NOT NULL,
+	"admin" int2 DEFAULT 0 NOT NULL,
+	CONSTRAINT email UNIQUE (email),
+	CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.users OWNER TO postgres;
+GRANT ALL ON TABLE public.users TO postgres;
+
+
+-- public.cinemas definition
+
+-- Drop table
+
+-- DROP TABLE public.cinemas;
+
+CREATE TABLE public.cinemas (
+	id uuid NOT NULL,
+	"name" varchar NULL,
+	code varchar NULL,
+	address text NULL,
+	CONSTRAINT cinemas_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.cinemas OWNER TO postgres;
+GRANT ALL ON TABLE public.cinemas TO postgres;
+
+
+-- public.auditoriums definition
+
+-- Drop table
+
+-- DROP TABLE public.auditoriums;
+
+CREATE TABLE public.auditoriums (
+	id uuid NOT NULL,
+	cinema_id uuid NULL,
+	"row" int2 NULL,
+	"column" int2 NULL,
+	"name" varchar NULL,
+	code varchar NULL,
+	price_model int2 NULL,
+	CONSTRAINT auditoriums_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.auditoriums OWNER TO postgres;
+GRANT ALL ON TABLE public.auditoriums TO postgres;
+
+
+-- public.schedule definition
+
+-- Drop table
+
+-- DROP TABLE public.schedule;
+
+CREATE TABLE public.schedule (
+	id uuid NOT NULL,
+	movie_id uuid NULL,
+	auditorium_id uuid NULL,
+	CONSTRAINT schedule_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.schedule OWNER TO postgres;
+GRANT ALL ON TABLE public.schedule TO postgres;
+
+
+-- public.seat_layouts definition
+
+-- Drop table
+
+-- DROP TABLE public.seat_layouts;
+
+CREATE TABLE public.seat_layouts (
+	id uuid NOT NULL,
+	auditorium_id uuid NULL,
+	"row" int2 NULL,
+	layout varchar NULL,
+	code text NULL,
+	CONSTRAINT seat_layouts_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.seat_layouts OWNER TO postgres;
+GRANT ALL ON TABLE public.seat_layouts TO postgres;
+
+
+-- public.seat_prices definition
+
+-- Drop table
+
+-- DROP TABLE public.seat_prices;
+
+CREATE TABLE public.seat_prices (
+	id uuid NOT NULL,
+	auditorium_id uuid NULL,
+	seat_code varchar NULL,
+	price varchar NULL,
+	CONSTRAINT seat_prices_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.seat_prices OWNER TO postgres;
+GRANT ALL ON TABLE public.seat_prices TO postgres;
+
+
+-- public.movies definition
+
+-- Drop table
+
+-- DROP TABLE public.movies;
+
+CREATE TABLE public.movies (
+	id uuid NOT NULL,
+	"name" text NULL,
+	category_id uuid NULL,
+	content_rate_id uuid NULL,
+	duration int4 NULL,
+	CONSTRAINT movies_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.movies OWNER TO postgres;
+GRANT ALL ON TABLE public.movies TO postgres;
+
+
+-- public.tickets definition
+
+-- Drop table
+
+-- DROP TABLE public.tickets;
+
+CREATE TABLE public.tickets (
+	id uuid NOT NULL,
+	user_id uuid NULL,
+	movie_id uuid NULL,
+	CONSTRAINT tickets_pk PRIMARY KEY (id)
+);
+
+-- Permissions
+
+ALTER TABLE public.tickets OWNER TO postgres;
+GRANT ALL ON TABLE public.tickets TO postgres;
+
+
+-- public.cities definition
+
+-- Drop table
+
+-- DROP TABLE public.cities;
+
+CREATE TABLE public.cities (
+	id uuid NOT NULL,
+	province_id uuid NOT NULL,
+	"name" varchar NOT NULL,
+	code varchar NULL,
+	CONSTRAINT cities_pkey PRIMARY KEY (id),
+	CONSTRAINT cities_province FOREIGN KEY (province_id) REFERENCES public.provinces(id)
+);
+
+-- Permissions
+
+ALTER TABLE public.cities OWNER TO postgres;
+GRANT ALL ON TABLE public.cities TO postgres;
+
+
+
+
+-- Permissions
+
+GRANT ALL ON SCHEMA public TO pg_database_owner;
+GRANT USAGE ON SCHEMA public TO public;
